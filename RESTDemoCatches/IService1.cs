@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using CatchLibrary;
 
 namespace RESTDemoCatches
 {
@@ -14,34 +15,39 @@ namespace RESTDemoCatches
     {
 
         [OperationContract]
-        string GetData(int value);
+        [WebInvoke(
+            Method = "GET", 
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "catches")]
+        IList<Catch> GetCatches();
 
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
+        [WebInvoke(
+            Method = "GET",
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "catches/{id}")]
+        Catch GetOneCatch(string id);
 
-        // TODO: Add your service operations here
-    }
+        [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            RequestFormat = WebMessageFormat.Json,
+            UriTemplate = "catches")]
+        void AddCatch(Catch newCatch);
 
+        [OperationContract]
+        [WebInvoke(
+            Method = "DELETE",
+            RequestFormat = WebMessageFormat.Json,
+            UriTemplate = "catches?id={id}")]
+        Catch DeleteCatch(int id);
 
-    // Use a data contract as illustrated in the sample below to add composite types to service operations.
-    [DataContract]
-    public class CompositeType
-    {
-        bool boolValue = true;
-        string stringValue = "Hello ";
-
-        [DataMember]
-        public bool BoolValue
-        {
-            get { return boolValue; }
-            set { boolValue = value; }
-        }
-
-        [DataMember]
-        public string StringValue
-        {
-            get { return stringValue; }
-            set { stringValue = value; }
-        }
+        [OperationContract]
+        [WebInvoke(
+            Method = "PUT",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            UriTemplate = "catches")]
+        Catch UpdateCatch(Catch myCatch);
     }
 }
